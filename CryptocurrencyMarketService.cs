@@ -10,7 +10,7 @@ namespace Ucm.Mii.Pdap.Presentation
         public delegate void MarketUpdateHandler(
             object sender, MarketUpdateEventArgs e);
 
-        public event MarketUpdateHandler StockUpdate;
+        public event MarketUpdateHandler MarketUpdate;
 
         public CryptocurrencyMarketService()
         {
@@ -18,9 +18,7 @@ namespace Ucm.Mii.Pdap.Presentation
             mActualPrices = new Dictionary<string, double>();
 
             List<string> cryptoCurrencies = new List<string>()
-            {
-                "Bitcoin", "XRP", "Ethereum", "Tether", "Stellar", "EOS"
-            };
+                { "Bitcoin", "XRP", "Ethereum", "Tether" };
 
             cryptoCurrencies.ForEach(cryptoName =>
                 mActualPrices.Add(cryptoName, 10.0 + mRandom.Next(-2, 3)));
@@ -60,7 +58,7 @@ namespace Ucm.Mii.Pdap.Presentation
                     mRandom.Next(0, mActualPrices.Count));
 
                 // 2.- Calculate price delta (based on probability!).
-                double delta = (mRandom.Next(0, 10) == 0)
+                double delta = (mRandom.Next(0, 5) == 0)
                     ? 5.0
                     : mRandom.Next(1, 4);
 
@@ -87,15 +85,15 @@ namespace Ucm.Mii.Pdap.Presentation
                 //
                 // if (StockUpdate != null)
                 //      StockUpdate(this, args);
-                MarketUpdateHandler temp = StockUpdate;
+                MarketUpdateHandler temp = MarketUpdate;
                 temp?.Invoke(this, args);
 
                 // 5.- Check if the server must keep running.
                 if (!IsConnected())
                     return;
 
-                // 6.- Sleep a random amount of time.
-                Thread.Sleep(mRandom.Next(250, 1250));
+                // 6.- Sleep, we don't want to get crazy!
+                Thread.Sleep(150);
             }
         }
 
@@ -115,6 +113,8 @@ namespace Ucm.Mii.Pdap.Presentation
             Currency = currency;
             Price = price;
         }
+
+        public override string ToString() => $"{Currency} -> {Price} USD";
     }
 
     public class MarketUpdateEventArgs : EventArgs
