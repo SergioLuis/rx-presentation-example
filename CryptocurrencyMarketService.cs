@@ -7,10 +7,7 @@ namespace Ucm.Mii.Pdap.Presentation
 {
     public class CryptocurrencyMarketService
     {
-        public delegate void MarketUpdateHandler(
-            object sender, MarketUpdateEventArgs e);
-
-        public event MarketUpdateHandler MarketUpdate;
+        public event EventHandler<MarketUpdateEventArgs> MarketUpdate;
 
         public CryptocurrencyMarketService()
         {
@@ -85,7 +82,7 @@ namespace Ucm.Mii.Pdap.Presentation
                 //
                 // if (StockUpdate != null)
                 //      StockUpdate(this, args);
-                MarketUpdateHandler temp = MarketUpdate;
+                EventHandler<MarketUpdateEventArgs> temp = MarketUpdate;
                 temp?.Invoke(this, args);
 
                 // 5.- Check if the server must keep running.
